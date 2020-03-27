@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>imgs/mc2.png</file>
+    <file>imgs/mkey2.png</file>
+    <file>imgs/morse-code.png</file>
+    <file>imgs/morsekey.jpg</file>
+    <file>imgs/morsekey.png</file>
+  </qresource>
+</RCC>
