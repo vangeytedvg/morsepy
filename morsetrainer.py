@@ -49,8 +49,7 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
         self.wpmSlider.valueChanged.connect(self.changeWPM)
         self.actionLightbulb_simmulator.triggered.connect(
             self.lightbulb_clicked)
-
-
+            
     # ------ Non event related methods
 
     def addRadioButtons(self):
