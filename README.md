@@ -12,4 +12,5 @@ For more information about Morse code visit [Wikipedia Morse Code](https://en.wi
 
 Danny Van Geyte
 Senior Software Engineer
+email : vangeytedvg@gmail.com
 Belgium.
