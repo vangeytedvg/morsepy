@@ -28,6 +28,7 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         super(MorseTrainer, self).__init__()
+
         self.WPM = 0
         self.setupUi(self)
         self.loadsettings()
@@ -63,10 +64,12 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
     def transmit_morse(self):
         if self.txtSource.toPlainText():
             message = self.txtSource.toPlainText()
+            morse_code = ""
             for letter in message:
                 self.lblAlpha.setText(letter)
                 cypher = morse.encrypt(letter.upper())
-                self.txtCypher.setText(cypher)
+                morse_code += cypher
+                self.txtCypher.setText(morse_code)
                 QApplication.processEvents()
                 if self.actionLearn.isChecked():
                     self.tone(cypher=cypher.strip(), speed=self.WPM)
