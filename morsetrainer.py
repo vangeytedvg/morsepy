@@ -1,10 +1,11 @@
-'''
-    Filename       : morsetrainer.py
-    Last Modified  : 27/03/2020
-    Purpose        : More code trainer application
-    Written and designed by Danny Van Geyte
-    Start of development : 27/03/2020
-'''
+"""
+   Filename : morsetrainer.py
+   Purpose  : 
+   Created  : 27/03/2020
+   Written and designed by Danny Van Geyte
+   Modification history: 
+          LM   : 29/03/2020 (Added lightbulb simulator)
+"""
 import os
 import subprocess
 import sys
@@ -28,16 +29,18 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         super(MorseTrainer, self).__init__()
-
         self.WPM = 0
         self.setupUi(self)
         self.loadsettings()
 
         # ---- Action events
+        self.actionLightbulb_simmulator.triggered.connect(self.lightbulb_clicked)
 
-        # ---- Button events
+        # ---- Button or control events
         self.btnSendMorse.pressed.connect(self.transmit_morse)
         self.wpmSlider.valueChanged.connect(self.changeWPM)
+        self.actionLightbulb_simmulator.triggered.connect(
+            self.lightbulb_clicked)
 
     # ------ Non event related methods
     def changeWPM(self):
@@ -65,23 +68,25 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
             self.lblAlpha.setStyleSheet("background-color: rgb(0, 0, 0);")
             QApplication.processEvents()
             sleep(0.05*10)
-            if dida == '.':                
+            if dida == '.':
                 self.lblAlpha.setText(".")
-                self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+                self.lblAlpha.setStyleSheet(
+                    "background-color: rgb(255, 255, 127);")
                 QApplication.processEvents()
-                sleep(0.05 * 5)
+                sleep(0.05 * (speed + 5))
                 #self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
             elif dida == '-':
                 self.lblAlpha.setText("-")
-                self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+                self.lblAlpha.setStyleSheet(
+                    "background-color: rgb(255, 255, 127);")
                 QApplication.processEvents()
-                sleep(0.05 * 20)
+                sleep(0.05 * (speed + 20))
                 #self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
-            
 
     # ------ Action event handlers
 
     # ------ Button event handlers
+
     def transmit_morse(self):
         if self.txtSource.toPlainText():
             message = self.txtSource.toPlainText()
@@ -106,6 +111,24 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
                         # ------ Do we need to play a space sound
                         if self.actionPlay_space_holder.isChecked():
                             subprocess.call(["mpg123", "-q", "sps.mp3"])
+
+    def lightbulb_clicked(self):
+        if self.actionLightbulb_simmulator.isChecked():
+            # ------ Make the flashlight bigger
+            self.lblAlpha.setFixedSize(QSize(200,200))
+            self.actionLearn.setChecked(False)
+            self.actionLearn.setEnabled(False)
+            self.actionLetter.setChecked(False)
+            self.actionLetter.setEnabled(False)
+            self.actionPlay_space_holder.setChecked(False)
+            self.actionPlay_space_holder.setEnabled(False)
+            self.wpmSlider.setEnabled(False)
+        else:
+            self.lblAlpha.setFixedSize(QSize(100,100))
+            self.wpmSlider.setEnabled(True)
+            self.actionPlay_space_holder.setEnabled(True)
+            self.actionLetter.setEnabled(True)
+            self.actionLearn.setEnabled(True)
 
     # ----- Standard system events
     def closeEvent(self, event):

@@ -48,7 +48,8 @@
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(255, 255, 0);</string>
+         <string notr="true">color: rgb(255, 255, 0);
+</string>
         </property>
         <property name="text">
          <string/>
@@ -214,7 +215,7 @@
      <normaloff>:/icons/imgs/flashlight.png</normaloff>:/icons/imgs/flashlight.png</iconset>
    </property>
    <property name="text">
-    <string>Lightbulb simmulator</string>
+    <string>Lightbulb simulator</string>
    </property>
   </action>
  </widget>

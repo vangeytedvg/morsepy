@@ -34,7 +34,8 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(48)
         self.lblAlpha.setFont(font)
-        self.lblAlpha.setStyleSheet("color: rgb(255, 255, 0);")
+        self.lblAlpha.setStyleSheet("color: rgb(255, 255, 0);\n"
+"")
         self.lblAlpha.setText("")
         self.lblAlpha.setAlignment(QtCore.Qt.AlignCenter)
         self.lblAlpha.setObjectName("lblAlpha")
@@ -135,5 +136,5 @@ class Ui_MainWindow(object):
         self.actionLetter.setText(_translate("MainWindow", "Sound between letters"))
         self.actionLetter.setToolTip(_translate("MainWindow", "Sound between letters"))
         self.actionPlay_space_holder.setText(_translate("MainWindow", "Play space holder"))
-        self.actionLightbulb_simmulator.setText(_translate("MainWindow", "Lightbulb simmulator"))
+        self.actionLightbulb_simmulator.setText(_translate("MainWindow", "Lightbulb simulator"))
 import images_rc
