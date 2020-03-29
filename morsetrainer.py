@@ -58,6 +58,17 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
 
             sleep(speed / 50)    
 
+    def light_bulb(self, cypher, speed=10):
+        # ------ Simmulate a light bulb morse code
+        self.lblAlpha.setText("")
+        if cypher == '.':
+            self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+            sleep(0.10)
+        elif cypher == '_':
+            self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+            sleep(0.50)
+        self.lblAlpha.setStyleSheet("background-color: rgb(0, 0, 0);")
+
     # ------ Action event handlers
 
     # ------ Button event handlers
@@ -66,19 +77,26 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
             message = self.txtSource.toPlainText()
             morse_code = ""
             for letter in message:
-                self.lblAlpha.setText(letter)
+                #self.lblAlpha.setText(letter)
                 cypher = morse.encrypt(letter.upper())
                 morse_code += cypher
                 self.txtCypher.setText(morse_code)
+                #self.lblMorse.setText(cypher)
                 QApplication.processEvents()
-                if self.actionLearn.isChecked():
-                    self.tone(cypher=cypher.strip(), speed=self.WPM)
-                    subprocess.call(["mpg123", "-q", "nos.mp3"])
-                if letter==' ':
-                    # ------ Do we need to play a space sound
-                    if self.actionPlay_space_holder.isChecked():
-                        subprocess.call(["mpg123", "-q", "sps.mp3"])   
-    
+                sleep(self.WPM / 50)
+                if self.actionLightbulb_simmulator.isChecked():
+                    self.light_bulb(cypher, self.WPM)
+                else:
+                    self.lblAlpha.setText(letter)
+                    self.lblMorse.setText(cypher)
+                    if self.actionLearn.isChecked():
+                        self.tone(cypher=cypher.strip(), speed=self.WPM)
+                        subprocess.call(["mpg123", "-q", "nos.mp3"])
+                    if letter == ' ':
+                        # ------ Do we need to play a space sound
+                        if self.actionPlay_space_holder.isChecked():
+                            subprocess.call(["mpg123", "-q", "sps.mp3"])   
+                
     # ----- Standard system events
     def closeEvent(self, event):
         """

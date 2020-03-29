@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>imgs/flashlight.png</file>
     <file>imgs/mc2.png</file>
     <file>imgs/mkey2.png</file>
     <file>imgs/morse-code.png</file>
