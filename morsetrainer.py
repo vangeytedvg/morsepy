@@ -32,9 +32,17 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
         self.WPM = 0
         self.setupUi(self)
         self.loadsettings()
+        # ------ Default to morse sounds
+        self.dotSound = "sounds/dot.mp3"
+        self.dashSound = "sounds/dash.mp3"
+
+        # ------ QT Desginer does not allow to add
+        # ------ controls with the same name, this hack does the job.
+        self.addRadioButtons()
 
         # ---- Action events
-        self.actionLightbulb_simmulator.triggered.connect(self.lightbulb_clicked)
+        self.actionLightbulb_simmulator.triggered.connect(
+            self.lightbulb_clicked)
 
         # ---- Button or control events
         self.btnSendMorse.pressed.connect(self.transmit_morse)
@@ -42,27 +50,64 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
         self.actionLightbulb_simmulator.triggered.connect(
             self.lightbulb_clicked)
 
+
     # ------ Non event related methods
+
+    def addRadioButtons(self):
+        """
+            Purpose    : Add radio buttons to the groupbox
+            Parameters : None 
+            Returns    : None
+        """
+        # ------ Real morse sounds button
+        rbSoundType = QRadioButton("Real morse sounds")
+        rbSoundType.setChecked(True)
+        rbSoundType.tag = "morse"
+        rbSoundType.toggled.connect(self.rbSoundType_onClicked)
+        self.horizontalLayout.addWidget(rbSoundType)
+        # ------ Dit Dah Button
+        rbSoundType = QRadioButton("Dit Dah sounds")
+        rbSoundType.tag = "didah"
+        rbSoundType.toggled.connect(self.rbSoundType_onClicked)
+        self.horizontalLayout.addWidget(rbSoundType)
+
+
     def changeWPM(self):
+        """
+            Purpose    : Set speed
+            Parameters : None
+            Returns    : None
+        """
         self.WPM = self.wpmSlider.value()
 
+
     def tone(self, cypher=None, speed=10):
+        """
+            Purpose    : Generate the morse code sound
+            Parameters : Morse code, transmit speed
+            Returns    : None
+        """
         for cmorse in cypher:
             if cmorse == '.':
-                subprocess.call(["mpg123", "-q", "di.mp3"])
+                subprocess.call(["mpg123", "-q", self.dotSound])
             elif cmorse == '-':
-                subprocess.call(["mpg123", "-q", "da.mp3"])
-                pass
+                subprocess.call(["mpg123", "-q", self.dashSound])
             elif cmorse == ' ':
                 if self.actionPlay_space_holder.isChecked():
                     subprocess.call(["mpg123", "-q", "sps.mp3"])
             if self.actionLetter.isChecked():
                 subprocess.call(["mpg123", "-q", "single.mp3"])
-
+            # ------ Wait
             sleep(speed / 50)
 
+
     def light_bulb(self, cypher, speed=10):
-        # ------ Simmulate a light bulb morse code
+        """
+            Purpose    : Simulate a light been flased according to morse code
+            Parameters : cypher, the morse code,
+                         speed, lightsignal duration
+            Returns    : None
+        """
         for dida in cypher:
             self.lblAlpha.setText(" ")
             self.lblAlpha.setStyleSheet("background-color: rgb(0, 0, 0);")
@@ -86,8 +131,24 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
     # ------ Action event handlers
 
     # ------ Button event handlers
+    def rbSoundType_onClicked(self):
+        rb = self.sender()
+        if rb.isChecked():
+            if rb.tag == "morse":
+                self.dotSound = "sounds/dot.mp3"
+                self.dashSound = "sounds/dash.mp3"
+            elif rb.tag == "didah":
+                self.dotSound = "sounds/di.mp3"
+                self.dashSound = "sounds/da.mp3"
+            print(self.dotSound, self.dashSound)
+
 
     def transmit_morse(self):
+        """
+            Purpose    : Generate morse code
+            Parameters : None
+            Returns    : None
+        """
         if self.txtSource.toPlainText():
             message = self.txtSource.toPlainText()
             morse_code = ""
@@ -112,10 +173,18 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
                         if self.actionPlay_space_holder.isChecked():
                             subprocess.call(["mpg123", "-q", "sps.mp3"])
 
+
     def lightbulb_clicked(self):
+        """
+            Purpose    : Deactivate or Activate controls based on selection
+            Parameters : None
+            Returns    : None
+        """
         if self.actionLightbulb_simmulator.isChecked():
+            self.lblMorse.setText(" ")
+            self.lblAlpha.setStyleSheet("background-color: rgb(0, 0, 0);")
             # ------ Make the flashlight bigger
-            self.lblAlpha.setFixedSize(QSize(200,200))
+            self.lblAlpha.setFixedSize(QSize(200, 200))
             self.actionLearn.setChecked(False)
             self.actionLearn.setEnabled(False)
             self.actionLetter.setChecked(False)
@@ -124,11 +193,13 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
             self.actionPlay_space_holder.setEnabled(False)
             self.wpmSlider.setEnabled(False)
         else:
-            self.lblAlpha.setFixedSize(QSize(100,100))
+            self.lblAlpha.setStyleSheet("")
+            self.lblAlpha.setFixedSize(QSize(100, 100))
             self.wpmSlider.setEnabled(True)
             self.actionPlay_space_holder.setEnabled(True)
             self.actionLetter.setEnabled(True)
             self.actionLearn.setEnabled(True)
+
 
     # ----- Standard system events
     def closeEvent(self, event):
@@ -180,9 +251,6 @@ if __name__ == "__main__":
         Parameters : None
         Returns    : None
     """
-    import sys
-    import os
-
     app = QApplication(sys.argv)
     # # time.sleep(1)
     main_form = MorseTrainer()
