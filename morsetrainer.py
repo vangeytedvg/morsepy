@@ -1,21 +1,23 @@
-"""
+'''
     Filename       : morsetrainer.py
     Last Modified  : 27/03/2020
     Purpose        : More code trainer application
     Written and designed by Danny Van Geyte
     Start of development : 27/03/2020
-"""
+'''
+import os
+import subprocess
+import sys
+from time import sleep
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtMultimedia import QSound
-from time import sleep
-import os, sys
-from ui.main_form import Ui_MainWindow
-from Settings import SettingsManager
 
 import morse
-import subprocess
+from Settings import SettingsManager
+from ui.main_form import Ui_MainWindow
+
 
 class MorseTrainer(QMainWindow, Ui_MainWindow):
     """
@@ -24,8 +26,6 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
         Returns    : None
     """
 
-    dida = {'di': QSound("sounds/di.wav"), 'da': QSound('sounds/da.wav'), 'nos': QSound('sounds/nos.wav')}
-
     def __init__(self):
         super(MorseTrainer, self).__init__()
 
@@ -33,7 +33,7 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.loadsettings()
 
-        # ---- Action events        
+        # ---- Action events
 
         # ---- Button events
         self.btnSendMorse.pressed.connect(self.transmit_morse)
@@ -56,18 +56,28 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
             if self.actionLetter.isChecked():
                 subprocess.call(["mpg123", "-q", "single.mp3"])
 
-            sleep(speed / 50)    
+            sleep(speed / 50)
 
     def light_bulb(self, cypher, speed=10):
         # ------ Simmulate a light bulb morse code
-        self.lblAlpha.setText("")
-        if cypher == '.':
-            self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
-            sleep(0.10)
-        elif cypher == '_':
-            self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
-            sleep(0.50)
-        self.lblAlpha.setStyleSheet("background-color: rgb(0, 0, 0);")
+        for dida in cypher:
+            self.lblAlpha.setText(" ")
+            self.lblAlpha.setStyleSheet("background-color: rgb(0, 0, 0);")
+            QApplication.processEvents()
+            sleep(0.05*10)
+            if dida == '.':                
+                self.lblAlpha.setText(".")
+                self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+                QApplication.processEvents()
+                sleep(0.05 * 5)
+                #self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+            elif dida == '-':
+                self.lblAlpha.setText("-")
+                self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+                QApplication.processEvents()
+                sleep(0.05 * 20)
+                #self.lblAlpha.setStyleSheet("background-color: rgb(255, 255, 127);")
+            
 
     # ------ Action event handlers
 
@@ -77,11 +87,11 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
             message = self.txtSource.toPlainText()
             morse_code = ""
             for letter in message:
-                #self.lblAlpha.setText(letter)
+                # self.lblAlpha.setText(letter)
                 cypher = morse.encrypt(letter.upper())
                 morse_code += cypher
                 self.txtCypher.setText(morse_code)
-                #self.lblMorse.setText(cypher)
+                # self.lblMorse.setText(cypher)
                 QApplication.processEvents()
                 sleep(self.WPM / 50)
                 if self.actionLightbulb_simmulator.isChecked():
@@ -95,8 +105,8 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
                     if letter == ' ':
                         # ------ Do we need to play a space sound
                         if self.actionPlay_space_holder.isChecked():
-                            subprocess.call(["mpg123", "-q", "sps.mp3"])   
-                
+                            subprocess.call(["mpg123", "-q", "sps.mp3"])
+
     # ----- Standard system events
     def closeEvent(self, event):
         """
@@ -130,7 +140,8 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
             "size": 0,
         }
         setting = SettingsManager()
-        this_settings_getter = setting.load_settings(this_settings, 'denkatech', 'morse')
+        this_settings_getter = setting.load_settings(
+            this_settings, 'denkatech', 'morse')
         # Restore the size of our form
         try:
             self.move(this_settings_getter["position"])
@@ -155,4 +166,3 @@ if __name__ == "__main__":
     # # time.sleep(5)
     main_form.show()
     sys.exit(app.exec_())
-
