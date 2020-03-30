@@ -22,12 +22,17 @@ from ui.main_form import Ui_MainWindow
 
 class MorseTrainer(QMainWindow, Ui_MainWindow):
     """
-        Purpose    : Represents the main window
+        Purpose    : Construct the app main window and main loop
         Parameters : QMainwindow, Entry point
         Returns    : None
     """
 
     def __init__(self):
+        """
+            Purpose    : Constructor
+            Parameters : self
+            Returns    : None
+        """
         super(MorseTrainer, self).__init__()
         self.WPM = 0
         self.setupUi(self)
@@ -49,7 +54,7 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
         self.wpmSlider.valueChanged.connect(self.changeWPM)
         self.actionLightbulb_simmulator.triggered.connect(
             self.lightbulb_clicked)
-            
+
     # ------ Non event related methods
 
     def addRadioButtons(self):
@@ -158,12 +163,13 @@ class MorseTrainer(QMainWindow, Ui_MainWindow):
                 self.txtCypher.setText(morse_code)
                 # self.lblMorse.setText(cypher)
                 QApplication.processEvents()
-                sleep(self.WPM / 50)
+                #sleep(self.WPM / 50)
                 if self.actionLightbulb_simmulator.isChecked():
                     self.light_bulb(cypher, self.WPM)
                 else:
                     self.lblAlpha.setText(letter)
                     self.lblMorse.setText(cypher)
+                    QApplication.processEvents()
                     if self.actionLearn.isChecked():
                         self.tone(cypher=cypher.strip(), speed=self.WPM)
                         subprocess.call(["mpg123", "-q", "nos.mp3"])
